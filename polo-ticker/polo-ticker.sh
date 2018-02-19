@@ -9,14 +9,17 @@ function XMRUSDT() {
   XMR=$(curl -s "https://poloniex.com/public?command=returnTicker" | egrep -o '"USDT_XMR":{"id":126,"last":"[0-9]+(\.)?([0-9]{0,5})?' | sed 's/"USDT_XMR":{"id":126,"last":"//' | sed 's/"//')
   if (( $(awk 'BEGIN {print ("'$XMR'" > "'$OLD'")}') )); then
     echo -e "∙ XMR: $GREEN $XMR $RESET ∙"
-    COLOR='\u001b[32;2m'
+    COLOR='\u001b[32;2m' # greenish
   elif (( $(awk 'BEGIN {print ("'$XMR'" == "'$OLD'")}') )); then
     echo -e "∙ XMR: $COLOR $XMR $RESET ∙"
   else 
     echo -e "∙ XMR: $RED $XMR $RESET ∙"
-    COLOR='\u001b[31;2m'
+    COLOR='\u001b[31;2m' # reddish
   fi
   OLD=$XMR
+  # set terminal title
+  #echo -e '\033k'$XMR'\033\\'
+  echo -ne '\033]2;'$XMR'\007'
 }
 
 while true ; do XMRUSDT ; sleep 10; done
